@@ -37,14 +37,56 @@ class EntityUnitTest {
     private Appointment a2;
     private Appointment a3;
 
-    @Test
-    void this_is_a_test(){
-        // DELETE THIS TEST
-        assertThat(false).isEqualTo(true);
-    }
+ 
 
     /** TODO
      * Implement tests for each Entity class: Doctor, Patient, Room and Appointment.
      * Make sure you are as exhaustive as possible. Coverage is checked ;)
      */
+	   @Test
+    //Testeamos si inserta bien un doctor
+    void doctorTest(){
+
+        d1 = new Doctor("Smith","Cover",50,"smithcover@gmail.com");
+
+        entityManager.persistAndFlush(d1);
+    }
+    @Test
+        //Comprobamos si inserta bien un paciente
+    void patientTest(){
+
+        p1 = new Patient("Pepe", "Sanchis",20, "pepesanchis@gmail.com");
+
+        entityManager.persistAndFlush(p1);
+
+    }
+    @Test
+        //Miramos si inserta bien una sala
+    void roomTest(){
+
+        r1 = new Room("Cardiology");
+
+        entityManager.persistAndFlush(r1);
+
+
+    }
+    @Test
+        //Testamos si inserta ya un cita completa e incluso 3
+    void appointmentTest(){
+        d1 = new Doctor("Smith","Cover",50,"smithcover@gmail.com");
+        r1 = new Room("Cardiology");
+        p1 = new Patient("Pepe", "Sanchis",20, "pepesanchis@gmail.com");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+
+        LocalDateTime startsAt= LocalDateTime.parse("19:30 24/04/2023", formatter);
+        LocalDateTime finishesAt = LocalDateTime.parse("20:30 24/04/2023", formatter);
+        a1 = new Appointment(p1,d1,r1,startsAt,finishesAt);
+        a2 = new Appointment(p1,d1,r1,startsAt,finishesAt);
+        a3 = new Appointment(p1,d1,r1,startsAt,finishesAt);
+
+        entityManager.persistAndFlush(a1);
+        entityManager.persistAndFlush(a2);
+        entityManager.persistAndFlush(a3);
+    }
+
 }
