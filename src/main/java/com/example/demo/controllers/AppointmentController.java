@@ -56,8 +56,32 @@ public class AppointmentController {
          * Implement this function, which acts as the POST /api/appointment endpoint.
          * Make sure to check out the whole project. Specially the Appointment.java class
          */
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        //Miramos que el objeto no sea null
+        if (appointment == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        //Miramos que la hora de entrada a la consulta sea siempre mas pronto que la de salida, tampoco podran ser iguales
+        if(appointment.getStartsAt().equals(appointment.getFinishesAt()) ||
+                appointment.getStartsAt().isAfter(appointment.getFinishesAt())){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        //Miramos que no se repitan las horas de las citas que coincidan con la misma sala
+        List<Appointment> existingAppointments = appointmentRepository.findAll();
+        for (Appointment existingAppointment : existingAppointments) {
+            if (existingAppointment.overlaps(appointment)) {
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+
+        try {   //ejecutamos el insert con un try para evitar otras excepciones
+            appointmentRepository.save(appointment);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        //si pasa todas las barras da un status ok
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+        
 
 
     @DeleteMapping("/appointments/{id}")
