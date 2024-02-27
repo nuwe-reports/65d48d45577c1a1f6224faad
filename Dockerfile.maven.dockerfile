@@ -12,5 +12,5 @@ COPY --from=build /app/target .
 
 FROM openjdk:11
 WORKDIR /app
-COPY --from=package /app/my-service.jar .
-CMD ["java", "-jar", "target.jar"]
+COPY --from=package /app/maven-wrapper.jar .
+CMD ["java", "-jar", "maven-wrapper.jar"]
